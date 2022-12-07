@@ -44,7 +44,7 @@ __copyright__ = """
 # Imports
 ################################################################################
 
-import sys, os.path, optparse, datetime, email, email.header, email.Utils, re, xml
+import sys, os.path, optparse, datetime, email, email.header, email.utils, re, xml
 import string, logging, hashlib, math
 from xml.dom import minidom
 import nntplib, imaplib, poplib, mailbox
