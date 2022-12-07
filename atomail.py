@@ -171,7 +171,10 @@ def decode_header(header, default):
         # Iso8859-1.
         if not encoding:
             encoding = DEFAULT_ENCODING
-        decoded_header += result
+        try:
+            decoded_header += result.decode()
+        except AttributeError:
+            pass
     return decoded_header
 
 
