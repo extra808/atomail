@@ -45,7 +45,7 @@ __copyright__ = """
 ################################################################################
 
 import sys, os.path, optparse, datetime, email, email.header, email.Utils, re, xml
-import string, logging, md5, math
+import string, logging, hashlib, math
 from xml.dom import minidom
 import nntplib, imaplib, poplib, mailbox
 import cgi
@@ -74,7 +74,7 @@ class TZ(datetime.tzinfo) :
     return datetime.timedelta(minutes=math.floor(self.seconds/60))
 
 def message_id(message) :
-  hash = md5.new()
+  hash = hashlib.md5()
   if message['From'] :
     hash.update(message['From'])
   if message['Subject'] :
