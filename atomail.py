@@ -172,9 +172,13 @@ def decode_header(header, default):
         if not encoding:
             encoding = DEFAULT_ENCODING
         try:
-            decoded_header += result.decode()
+            result = result.decode(
+                encoding=encoding, errors='ignore') if encoding else result
         except AttributeError:
             pass
+
+        decoded_header += result
+
     return decoded_header
 
 
