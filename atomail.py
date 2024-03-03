@@ -65,6 +65,10 @@ import poplib
 import mailbox
 import html
 import functools
+from flask import Flask, Response
+
+
+
 
 ################################################################################
 # Constants
@@ -83,7 +87,15 @@ DEFAULT_ENCODING = "iso8859-1"
 ################################################################################
 # Auxiliary functions and classes
 ################################################################################
-
+def decode_bytes_to_str(data, encoding='utf-8'):
+    """
+    Decode bytes data into a string using the specified encoding.
+    """
+    if isinstance(data, bytes):
+        return data.decode(encoding)
+    else:
+        logging.warning("Not a bytes object but " + str(type(data)) )
+        return data  # Return data as is if it's not bytes
 
 class TZ(datetime.tzinfo):
     def __init__(self, seconds=0):
@@ -549,16 +561,22 @@ class IMAPSource(MailSource):
     def messages(self):
         logging.info('Retrieving relevant message numbers')
         _, msgnums = self.imap.search(None, 'ALL')
+        msgnums = decode_bytes_to_str(msgnums)
+        print(msgnums)
         msg_numbers = msgnums[0].split()
         while msg_numbers:
             msg_number = msg_numbers.pop()
-            logging.info('Fetching article ' + msg_number)
+            logging.info('Fetching article ' + str(msg_number))
             typ, data = self.imap.fetch(msg_number, '(RFC822)')
-            message = email.message_from_string(data[0][1])
+            string = decode_bytes_to_str(data[0][1])
+            message = email.message_from_string(string)
             if message:
                 yield message
             else:
-                logging.warn('Unable to parse message:\n' + data[0][1])
+                logging.warn('Unable to parse message:\n' + string)
+                
+                
+                
 
 
 ################################################################################
@@ -584,7 +602,7 @@ if __name__ == "__main__":
     parser.add_option('-t', '--title', metavar='TITLE',
                       help='The title of the target feed', default='AtoMail feed')
     parser.add_option('', '--max-items', metavar='ITEMS',
-                      help='The maximum number of items in the feed. Default: %default', type='int', default=10)
+                      help='The maximum number of items in the feed. Default: %default', type='int', default=100)
     parser.add_option('', '--max-time', metavar='MINUTES',
                       help='The maximum number of elapsed minutes for items in the feed', type='int', default=-1)
     parser.add_option('-s', '--strip-subject', action='store_true', dest='strip_subject',
