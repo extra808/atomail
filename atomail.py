@@ -65,7 +65,6 @@ import poplib
 import mailbox
 import html
 import functools
-from flask import Flask, Response
 
 
 
