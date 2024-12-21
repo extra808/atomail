@@ -10,6 +10,8 @@ Mail can be retrieved from many different sources, including local mailboxes, re
 Beware that AtoMail is still in alpha stage, and that it probably contains
 bugs.
 
+I have updated this forked version to make it run again. No guarantees for anything though.
+
 
 ## Usage
 
